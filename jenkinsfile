@@ -1,0 +1,73 @@
+ pipeline{
+     agent { label 'jenkins-slave' }
+
+	stages {
+
+    stage('Checkout Source') {
+      steps {
+        git 'http://10.10.20.146:3000/paul/spring-boot-jenkins-starter.git'
+                }
+        }
+    
+    stage('Build') {
+            steps {
+                sh 'mvn -B -DskipTests clean package'
+            }
+        }
+    stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+    //stage('Deliver') {
+           // steps {
+                //sh './jenkins/scripts/deliver.sh'
+           // }
+       // }
+        
+        
+     stage("Git creds"){
+            steps {
+            withCredentials([usernamePassword(credentialsId: 'paul-github', passwordVariable: 'GIT_USERNAME', usernameVariable: 'GIT_PASSWORD')]) {
+                sh("""
+                   pwd
+                    mv target/*.jar .
+                  
+                   git config --global user.email "paul@paul.com"
+                   git config --global user.name "paul"
+                    git config --local credential.helper "!f() { echo username=paul; echo password=VMware1!; }; f"
+                    git add *.jar
+                    git commit -m "test jenkins"
+                  
+
+                    git push origin master
+                    
+                    
+                """)
+            }
+        }
+        
+         
+     }
+     
+     stage('sleep') {
+            steps {
+                sh 'echo "Hello World"'
+                sh '''
+                    pwd
+                   
+                    sleep 10m
+                '''
+            }
+        }
+
+    
+        
+	}
+
+}
