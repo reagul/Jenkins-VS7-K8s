@@ -1,11 +1,11 @@
- pipeline{
+pipeline{
      agent { label 'jenkins-slave' }
 
 	stages {
 
     stage('Checkout Source') {
       steps {
-        git 'http://10.10.20.146:3000/paul/spring-boot-jenkins-starter.git'
+        git 'http://10.10.20.146:3000/paul/springboot-jenkins-actuator-rest.git'
                 }
         }
     
@@ -55,9 +55,17 @@
          
      }
      
+    stage('deploy yml') {
+            steps {
+                sh '''
+                   kubectl apply -f http://10.10.20.146:3000/paul/springboot-jenkins-actuator-rest/raw/branch/master/hello-springboot-actuator.yaml
+                   
+                '''
+            }
+        }
+     
      stage('sleep') {
             steps {
-                sh 'echo "Hello World"'
                 sh '''
                     pwd
                    
