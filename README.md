@@ -119,7 +119,7 @@ In case you want to  run custom commands inside the slave, which you might do wi
 
 Let us configure a Kubernetes cloud inside Jenkins.
 
-### Kubernetes Cloud config.
+### Kubernetes Cloud config values
 
 
 This Jenkins master will initiate slave pod creation so we are configuring a Kubernetes cloud config with our custom slave images in it.
