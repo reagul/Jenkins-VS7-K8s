@@ -1,4 +1,5 @@
-# Needs cleanup ** Jenkins test cases guide for VS7-K8s { Project Pacific }
+# Needs validation ** 
+# Jenkins test cases guide for VS7-K8s { Project Pacific }
 This repo will take you through Installing Jenkins on your Env and run Pipeline to build a Java Spring Boot app
 
 Pre-Req : 
@@ -45,7 +46,9 @@ spec:
 `$ kubectl get pvc`
 
 
-### Install RBAC for K8 use.
+### Install RBAC for K8 use
+
+This Jenkins master will initiate slave pod creation for slaves on Kubernetes.
 
 ```
 apiVersion: v1
@@ -78,21 +81,10 @@ rules:
 
 
 ### Jenkins Deployment 
+
 The default jenkins/jnlp-slave image does not contain the kubectl or helm binaries, so you will need to build a custom image to use the kubernetes-cli plugin. Afterwards, push it to a registry \
 
 `$ kubectl apply -f ** ` \
-
-
-### Jenkins Slave 
-
-You can use the supplied Jenkins slave as is but `recommend` you clone it to YOUR local repository and version / tag it. 
-You can also run custom commands inside the slave. For examople if you plan on running scripts that call Python modules, then you might need to extend/custom build the avaialble slave images on Dockerhub \
-
-In this test-case we will configure a slave for Kubenretes Cloud \
-
-
-`$ docker tag jenkins/jenkins <Private Registry FQDN>/<Project>/jenkins-master:v1` \
-`$ docker push <Private Registry FQDN>/<Project>/jenkins-master:v1` 
 
 
 #### Configure Jenkins Service / Ingress. This allows you to access Jenkins over URL.
@@ -113,6 +105,32 @@ jenkins                      LoadBalancer   198.60.149.135   10.10.20.145   8080
 ![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/sa-kubeconfig.png)
 
 You might additionally enter the LB Eternal Ip into your local DNS.
+
+
+### Jenkins First time Acess and Password
+
+
+
+
+### Jenkins Slave 
+
+You can use the supplied Jenkins slave as is but `recommend` you clone it to YOUR local repository and version/tag it before using. 
+In case you want to  run custom commands inside the slave, which you might do with custom scripts being used in pilepile, then you might need to extend/custom build the avaialble slave images on Dockerhub. The process involves taking the slave Dockerfile and installing custom software modules and creating a new image.
+
+Let us configure a Kubernetes cloud inside Jenkins.
+
+### Kubernetes Cloud config.
+
+
+This Jenkins master will initiate slave pod creation so we are configuring a Kubernetes cloud config with our custom slave images in it.
+
+In this test-case we will configure a slave for Kubenretes Cloud \
+
+
+`$ docker tag jenkins/jenkins <Private Registry FQDN>/<Project>/jenkins-master:v1` \
+`$ docker push <Private Registry FQDN>/<Project>/jenkins-master:v1` 
+
+
 
 #### (Optional) Use LoadBalancer, as opposed to a Ingress Resource
 Change the ServiceType from:
