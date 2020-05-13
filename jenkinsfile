@@ -1,5 +1,5 @@
 pipeline{
-     agent { label 'jenkins-slave' }
+    agent { label 'jenkins-slave' }
 
 	stages {
 
@@ -24,29 +24,20 @@ pipeline{
                 }
             }
         }
-    //stage('Deliver') {
-           // steps {
-                //sh './jenkins/scripts/deliver.sh'
-           // }
-       // }
         
-        
-     stage("Git creds"){
+    stage("Git creds"){
             steps {
             withCredentials([usernamePassword(credentialsId: 'paul-github', passwordVariable: 'GIT_USERNAME', usernameVariable: 'GIT_PASSWORD')]) {
                 sh("""
-                   pwd
+                    pwd
                     mv target/*.jar .
                   
-                   git config --global user.email "paul@paul.com"
-                   git config --global user.name "paul"
+                    git config --global user.email "paul@paul.com"
+                    git config --global user.name "paul"
                     git config --local credential.helper "!f() { echo username=paul; echo password=VMware1!; }; f"
                     git add *.jar
                     git commit -m "test jenkins"
-                  
-
                     git push origin master
-                    
                     
                 """)
             }
