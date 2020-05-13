@@ -101,6 +101,15 @@ In this test-case we will configure a slave for Kubenretes Cloud \
 
 This will initate a LoadBalancer type ingress and once applied will show up like this 
 
+```
+$ kubectl get svc 
+
+NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP    PORT(S)                                       AGE
+hello-spring-boot-actuator   LoadBalancer   198.57.146.34    10.10.20.153   80:32303/TCP                                  11h
+jenkins                      LoadBalancer   198.60.149.135   10.10.20.145   8080:31403/TCP,50000:32715/TCP,80:32645/TCP   5d19h
+
+```
+
 ![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/sa-kubeconfig.png)
 
 You might additionally enter the LB Eternal Ip into your local DNS.
