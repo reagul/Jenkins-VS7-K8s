@@ -125,36 +125,33 @@ This Jenkins master will initiate slave pod creation so we are configuring a Kub
 
 In this test-case we will configure a slave for Kubenretes Cloud \
 
-Fill out plugin values
-Name: kubernetes
-Kubernetes URL: https://kubernetes.default:443
-Kubernetes Namespace: jenkins
-Credentials | Add | Jenkins (Choose Kubernetes service account option & Global + Save)
-Test Connection | Should be successful! If not, check RBAC permissions and fix it!
-Jenkins URL: http://jenkins
-Tunnel : jenkins:50000
-Apply cap only on alive pods : yes!
-Add Kubernetes Pod Template
-Name: jenkins-slave
-Namespace: jenkins
-Labels: jenkins-slave (you will need to use this label on all jobs)
-Containers | Add Template
-Name: jnlp
-Docker Image: aimvector/jenkins-slave
-Command to run :
-Arguments to pass to the command:
-Allocate pseudo-TTY: yes
-Add Volume
-HostPath type
-HostPath: /var/run/docker.sock
-Mount Path: /var/run/docker.sock
-Timeout in seconds for Jenkins connection: 300
-Save
+* Go to Manage Jenkins | Bottom of Page | Cloud | Kubernetes (Add kubenretes cloud)
+* Fill out plugin values
+    * Name: kubernetes
+    * Kubernetes URL: https://kubernetes.default:443
+    * Kubernetes Namespace: jenkins
+    * Credentials | Add | Jenkins (Choose Kubernetes service account option & Global + Save)
+    * Test Connection | Should be successful! If not, check RBAC permissions and fix it!
+    * Jenkins URL: http://jenkins
+    * Tunnel : jenkins:50000
+    * Apply cap only on alive pods : yes!
+    * Add Kubernetes Pod Template
+        * Name: jenkins-slave
+        * Namespace: jenkins
+        * Labels: jenkins-slave (you will need to use this label on all jobs)
+        * Containers | Add Template
+            * Name: jnlp
+            * Docker Image: aimvector/jenkins-slave
+            * Command to run : <Make this blank>
+            * Arguments to pass to the command: <Make this blank>
+            * Allocate pseudo-TTY: yes
+            * Add Volume
+                * HostPath type
+                * HostPath: /var/run/docker.sock
+                * Mount Path: /var/run/docker.sock
+        * Timeout in seconds for Jenkins connection: 300
+* Save
 
-
-
-#### (Optional) Use LoadBalancer, as opposed to a Ingress Resource
-Change the ServiceType from:
 ```
 ServiceType: ClusterIP
 ```
