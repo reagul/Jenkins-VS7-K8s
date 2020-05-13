@@ -154,7 +154,7 @@ In this test-case we will configure a slave for Kubenretes Cloud \
 * Save
 
 
-### Installing the Required Updates and Plugins
+### Installing Kubernetes plugin
 
 Select **Manage Jenkins**>**Manage Plugins**. Select the **Available** tab and enter "kubernetes" in the search filter. Choose the following plugin options:
 	
@@ -198,27 +198,19 @@ Select **Save**
 Return to the Jenkins Dashboard and select **Manage Jenkins**>**Configure System**. Scroll to the section *Cloud*>*Kubernetes* and notice the required fields.
 
 Open the command-line and issue the command \
+
 `$ kubectl config view` \
+
 Copy the URL from the server parameter output and replace the form value for *Kubernetes URL*
 ```
 apiVersion: v1
 clusters:
 - cluster:
     server: https://pksk8s01api.lab.local:8443
-```
-To collect the *Kubernetes server certificate key*, run the command: \
-`$ openssl s_client -connect <Kubernetes Cluster API FQDN>:8443` \
-For example, \
-`$ openssl s_client -connect pksk8s01api.lab.local:8443` \
-Copy the complete Server certificate and paste to the form value for *Kubernetes server certificate key*
-```
------BEGIN CERTIFICATE-----
-MIIDyzCCArOgAwIBAgIUQcRSyQ0Tm99eSoAjBoYQbyCzyKgwDQYJKoZIhvcNAQEL
-BQAwDTELMAkGA1UEAxMCY2EwHhcNMTgxMjA5MTQyNDE1WhcNMTkxMjA5MTQyNDE1
-<Truncated>
+
 hY8kAGeuT10K0cOVwtvsVXurIByTVettpfKOK3vMn5y5CXRtKXzJHYs8F25wojXs
 1Jczjvdbfnw4miV4fK8D
------END CERTIFICATE-----
+
 ```
 Select the *Credentials* drop-down option and choose **Secret Text** 
 
@@ -228,102 +220,9 @@ Select **Test Connection** and test results should indicate **Connection test su
 
 For basic operations, all other fields' default value should've populated with input from the values.yaml at the time of deployment. Verify the following:
 
-- *Cloud*/*Kubernetes*/*Jenkins URL* = **http://jenkins:8080/jenkins**
+- *Cloud*/*Kubernetes*/*Jenkins URL* = **http://someip:8080*
 - *Cloud*/*Kubernetes*/*Images*/*Kubernetes Pod Template*/*Containers*/*Container Template*/*Docker Image* = **< Registry Path to Jenkins Slave Image >** 
 >For example, harbor.lab.local/jenkins/jenkins-slave-k8s:v1
 
 Select **Save** and return to the Jenkins Dashboard
 
-### Create Test Projects to Launch Executor Pods
-Select **New Item** \
-Enter a name for the first test project, such as **"Test Project 1"**, select **Freestyle Project**, and select **OK**
-
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/jenkins-testproject-1.png)
-
-Scroll to the *Build* section, select the **Add build step** drop-down and choose **Execute shell**.  In the *Command* field enter `sleep 30`, then select **Save**
-
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/jenkins-build-testproject-1.png)
-
-Repeat the process to create a second test project, **"Test Project 2"**
-
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/jenkins-testprojects-list.png)
-
-Hover over the right of each project hyperlink to find a drop-down menu. For each project select **Build Now**. After initiating the builds, a build for each project should enter the build queue \
-
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/jenkins-buildqueue.png)
-
-Shortly following the builds entering the build queue, Jenkins should automatically launch two additional executors inside the Kubernetes cluster for processing the queue and executing the shell commands \
-
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/jenkins-executor.png)
-
-Both projects shall complete successfully \
-
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/jenkins-testprojects-success.png)
-
-### Kubernetes plugin - Create and Run a Declarative Pipeline
-Return to the Dashboard and Select **New Item** \
-*Enter an Item Name* such as **Declarative Pipeline Example**, select **Pipeline**, and select **OK**
-Scroll to the *Pipeline* section, paste the content from [Declarative Pipeline Example](https://raw.githubusercontent.com/csaroka/jenkins-kubernetes-plugin/master/examples/declarative-multiple-containers.groovy)
-into the *Script* field, and select **OK*
-From the Dashboard, select **Build Now**
-
-The pipeline creates a single Kubernetes pod with two containers, from maven and busybox images
-
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/jenkins-declarative-success.png)
-
-### Kubernetes-cli plugin - Execute kubectl Commands from the Shell
-Return to the Dashboard and Select **New Item** \
-*Enter an Item Name* such as **Kubernetes CLI Test**, select **Freestyle project**, and select **OK**
-
-Scroll to the *Build Environment* section and select **Configure Kubernetes CLI (kubectl)** \
-Select the *Credentials* drop-down menu and choose **Secret Text** \
-Populate the *Kubernetes server endpoint*,*Context name*, and *Cluster name* values with data from the kubeconfig. \
-
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/kube-cli-buildenv.png)
-
-Scroll to the next section, *Build*
-Enter the kubectl commands to execute from the shell, for instance
->Note: Be sure to update the context and the nginx image path and tag.
-```
-kubectl create ns frontend-test
-kubectl config set-context k8s01staging --namespace=frontend-test
-kubectl run nginx01 --image=harbor.lab.local/library/nginx:v1 --replicas=4 --port=80
-kubectl expose deployment nginx01 --port=80 --type=LoadBalancer
-sleep 30
-curl http://nginx01.frontend-test.svc.cluster.local
-kubectl get all
-kubectl delete ns frontend-test
-```
-
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/kube-cli-build.png)
-
-Select **Save**
-
-In the left pane, select **Build Now** \
-Following the build, the console output should report namespace objects and "Finished: Success"
-
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/kube-cli-build-out.png)
-
-## Integrate Jenkins with a GitHub Account
-Enter the login credentials and from the Dashboard select **Manage Jenkins**>**Manage Plugins**. Select the **Available** tab and enter "kubernetes" in the search filter. Choose the following plugin options:
-- GitHub
-- GitHub API
-- GitHub Authentication
-- GitHub Integration 
-
-Select **Download now and install after restart** \
-On the following page, choose **Restart Jenkins when installation is complete and no jobs are running**
-
-After a few minutes, if the status does not change, select **Return to Dashboard** and complete the login prompt.
-
-Login into your GitHub Account. Select the drop-down next to our profile picture, and choose **Settings**. Then select **Developer Settings**>**Personal Access Tokens**. Select **Generate New Token**. Name the token and select the privilege *admin:repo_hook*.  Copy the new access token to the clipboard or a temporary text file.
-
-From the Jenkins Dashboard select **Credentials**>**System**>**Global credentials (unrestricted)**>**Add Credentials** \
-Select the *Kind* drop-down and choose **Username with Password**
-Enter your **< GitHub Username >** in the Username field, past the **< API Access Token >** in the Password field, and enter **github** for both ID and description
-Select **OK**
-
-References: 
-- [Jenkins plugin to run dynamic slaves in a Kubernetes/Docker environment](https://github.com/jenkinsci/kubernetes-plugin/tree/master/examples)
-- [Kubernetes Tutorials-CI/CD Pipeline](https://kubernetes.io/docs/tutorials/#ci-cd-pipeline)
-- [Jenkins Helm Chart](https://github.com/helm/charts/tree/master/stable/jenkins)
