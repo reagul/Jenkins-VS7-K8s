@@ -1,149 +1,109 @@
-# Installing kubernetes-jenkins on Project Pacific 
-Integrate Jenkins with PKS provisioned Kubernetes Cluster
+# Needs cleanup ** Jenkins test cases guide for VS7-K8s { Project Pacific }
+This repo will take you through Installing Jenkins on your Env and run Pipeline to build a Java Spring Boot app
 
-## Prepare the Kubernetes Cluster and Chart Values
+Pre-Req : 
 
-### Clone the repo to a local directory
+- Need Persistant Volume : We use "projectpacific-storage-policy" in this example.
+- K8 cluster to install Master and Slave Pods.
+
+
+### Clone the repo  ** 
 `$ git clone https://https://github.com/reagul/Jenkins-For-ProjectPacific` \
 `$ cd kubernetes-jenkins`
 
 ### Create the project Namespace
-`$ kubectl create ns jenkins` \
+`$ kubectl create ns jenkins` 
+
+### Switch context to jenkins namespace
 `$ kubectl config set-context $(kubectl config current-context) --namespace=jenkins`
 
 ### Prepare Persistence Storage
-#### Create a storage class
-`$ cat jenkins-sc.yaml`
-```
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: jenkins-disk
-provisioner: kubernetes.io/vsphere-volume
-parameters:
-    diskformat: thin
-```
-`$ kubectl apply -f jenkins-sc.yaml` \
-`$ kubectl get sc`
+#### Storage Class is already configured for this GuestCluster. Here we provision a Claim for 4 GB. This claim will be applied to the Jenkins Deployment yaml.
 
-#### Create a persistent volume claim:
-`$ cat jenkins-pvc.yaml`
+`$ cat jenkins-sc.yaml` **
 ```
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: jenkins-data
-  annotations:
-    volume.beta.kubernetes.io/storage-class: jenkins-disk
+  name: jenkins-claim
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 4Gi
+  storageClassName: projectpacific-storage-policy
 ```
+
+
 `$ kubectl apply -f jenkins-pvc.yaml` \
+
+### Inspect the PVC / SC to validate bound Volume
+
+`$ kubectl get sc`
+
 `$ kubectl get pvc`
 
-### Build a Custom Jenkins Slave Image for using the Kubernetes/Helm CLI plugin
-The default jenkins/jnlp-slave image does not contain the kubectl or helm binaries, so you will need to build a custom image to use the kubernetes-cli plugin. Afterwards, push it to a registry\
-`$ cd jnlp-slave-image` \
-`$ docker build -t jenkins-slave-k8s .` \
-`$ docker tag jenkins-slave-k8s <Private Registry FQDN>/<Project>/jenkins-slave-k8s:v1`\
-`$ docker push <Private Registry FQDN>/<Project>/jenkins-slave-k8s:v1` \
-`$ cd ..` 
 
-Alternatively, you could pull from \
-`$ docker pull csaroka/jenkins-slave-k8s:lts`
+### Install RBAC for K8 use.
 
-### (Optional) Pull the Jenkins Master Image and Push to a Private Registry. If pulling direct from public registry, skip this step.
-`$ docker pull jenkins/jenkins:lts` \
-`$ docker tag jenkins/jenkins <Private Registry FQDN>/<Project>/jenkins-master:v1` \
-`$ docker push <Private Registry FQDN>/<Project>/jenkins-master:v1` 
-
-### Install Helm Client and Tiller Server
-
-Follow instructions available here for installing the Helm client:  
-https://docs.helm.sh/using_helm/#installing-helm 
-
-Apply the Tiller Service Account and RBAC policy
-
-`$ cat tiller-rbac.yaml`
 ```
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: tiller
-  namespace: kube-system
+  name: jenkins
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: tiller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: tiller
-    namespace: kube-system
+  name: jenkins
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get","list","watch"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
+
 ```
 
-`$ kubectl apply -f tiller-rbac.yaml`
+`$ kubectl apply -f jenkins.rbac.yaml sc`
 
-Deploy Tiller to the Kubernetes Cluster \
-`$ helm init --service-account tiller`
 
-### Prepare the Jenkins Helm Chart values.yaml
 
-`$ cd jenkins` \
-Open `values.yaml` with a text editor
+### Jenkins Deployment 
+The default jenkins/jnlp-slave image does not contain the kubectl or helm binaries, so you will need to build a custom image to use the kubernetes-cli plugin. Afterwards, push it to a registry \
 
-#### Identify Jenkins Container Images' Location
+`$ kubectl apply -f ** ` \
 
-Replace the *Image* and *ImageTag* values with the appropriate private registy paths. The defualt public images are commented out.
->If intending to use the Kubernetes CLI Plugin, you will need to follow the steps above to build a custom slave image with the kubectl and helm binaries, then push it to a registry. 
-```
-Master:
-  Image: "harbor.lab.local/jenkins/jenkins-master"
-  ImageTag: "v1"
-# Image: "jenkins/jenkins"
-# ImageTag: "lts"
-Agent:
-  Image: "harbor.lab.local/jenkins/jenkins-slave-k8s"
-  ImageTag: "v1"
-# Image: jenkins/jnlp-slave
-# ImageTag: 3.10-1
-```
-If behind a proxy, uncomment and update the paths
-```
-# InitContainerEnv:
-#   - name: http_proxy
-#     value: "http://192.168.64.1:3128"
-# ContainerEnv:
-#   - name: http_proxy
-#     value: "http://192.168.64.1:3128"
-```
-#### Change the Admin Password
-```
-AdminPassword: 'VMware1!'
-```
-or comment out the parameter to randomly generate a password for you
-```
-# AdminPassword: 'VMware1!'
-```
-#### Configure the Ingress Resource
 
-##### Set the Ingress Hostname
->Note: The hostname is customizable but the domain needs to match cluster's ingress controller's wildcard record in DNS. For example, *.pksk8s01apps.lab.local
-```
-HostName: jenkins.k8s01apps.lab.local
-```
-##### (Optional) Set the path
-```
-JenkinsUriPrefix: "/jenkins"
-```
+### Jenkins Slave 
+
+You can use the supplied Jenkins slave as is but `recommend` you clone it to YOUR local repository and version / tag it. 
+You can also run custom commands inside the slave. For examople if you plan on running scripts that call Python modules, then you might need to extend/custom build the avaialble slave images on Dockerhub \
+
+In this test-case we will configure a slave for Kubenretes Cloud \
+
+
+`$ docker tag jenkins/jenkins <Private Registry FQDN>/<Project>/jenkins-master:v1` \
+`$ docker push <Private Registry FQDN>/<Project>/jenkins-master:v1` 
+
+
+#### Configure Jenkins Service / Ingress. This allows you to access Jenkins over URL.
+
+`$ kubectl apply -f jenkins.service.yaml`
+
+This will initate a LoadBalancer type ingress and once applied will show up like this 
+
+![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/sa-kubeconfig.png)
+
+You might additionally enter the LB Eternal Ip into your local DNS.
 
 #### (Optional) Use LoadBalancer, as opposed to a Ingress Resource
 Change the ServiceType from:
