@@ -101,13 +101,15 @@ jenkins                      LoadBalancer   198.60.149.135   10.10.20.145   8080
 
 ```
 
-![alt text](https://github.com/csaroka/kubernetes-jenkins/blob/master/images/sa-kubeconfig.png)
 
 You might additionally enter the LB Eternal Ip into your local DNS.
 
 
 ### Jenkins First time Acess and Password
 
+Once you access the Jenkins URL, you will be prompted for a TMP password which you can fetch by doing
+
+`kubectl logs jenkinsmasterpod2adsvadf`
 
 
 ### Jenkins Slave 
