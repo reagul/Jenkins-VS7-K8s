@@ -1,5 +1,5 @@
 # Needs validation ** 
-# Jenkins test cases guide for VS7-K8s { Project Pacific }
+# Jenkins test cases guide for VS7-K8s { Project Pacific }. Install steps go in ORDER
 This repo will take you through Installing Jenkins on your Env and run Pipeline to build a Java Spring Boot app
 
 Pre-Req : 
@@ -46,7 +46,7 @@ spec:
 `$ kubectl get pvc`
 
 
-### Install RBAC for K8 use
+### Install RBAC for K8 use so it can spin master and slave pods
 
 This Jenkins master will initiate slave pod creation for slaves on Kubernetes.
 
@@ -77,7 +77,6 @@ rules:
 ```
 
 `$ kubectl apply -f jenkins.rbac.yaml sc`
-
 
 
 ### Jenkins Deployment 
