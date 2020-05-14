@@ -1,6 +1,6 @@
 # Needs validation ** 
-# Jenkins CI/CD test cases guide for VS7-K8s { Project Pacific }. I
-### nstall steps go in ORDER
+# Jenkins CI/CD test cases guide for VS7-K8s { Project Pacific }. 
+### Install steps go in ORDER
 This repo will take you through Installing Jenkins on your Env and run CI/CD Pipeline to build a Java Spring Boot app, test the app with maven unit tests, create a jar and then upload the Jar into a Git repo. It will then take  the Docker image and deploy it to  a K8 cluster. 
 
 Pre-Req : 
