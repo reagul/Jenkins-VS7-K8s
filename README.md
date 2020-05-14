@@ -6,6 +6,7 @@ Pre-Req :
 
 - Need Persistant Volume : We use "projectpacific-storage-policy" in this example.
 - K8 cluster to install Master and Slave Pods.
+- All yaml under the JeninsKinstall folder in this repo 
 
 
 ### Clone the repo  ** 
