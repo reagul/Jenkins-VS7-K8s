@@ -222,8 +222,7 @@ Select **Test Connection** and test results should indicate **Connection test su
 For basic operations, all other fields' default value should've populated with input from the values.yaml at the time of deployment. Verify the following:
 
 - *Cloud*/*Kubernetes*/*Jenkins URL* = **http://someip:8080*
-- *Cloud*/*Kubernetes*/*Images*/*Kubernetes Pod Template*/*Containers*/*Container Template*/*Docker Image* = **< Registry Path to Jenkins Slave Image >** 
->For example, harbor.lab.local/jenkins/jenkins-slave-k8s:v1
+### Running Jenkins Pipelines.
 
-Select **Save** and return to the Jenkins Dashboard
+There are code samples under the JenkinsScriptFiles that can be used to run some sample pipelines. 
 
