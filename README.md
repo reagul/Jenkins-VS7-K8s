@@ -5,8 +5,8 @@
 ### Summary of experience 
 
 This repo will take you through 
-- Installing Jenkins on your Env 
-- Install and run a SpringBoot CI/CD Pipeline
+- Installing Jenkins on your Kubernetes Env
+- Run  SpringBoot CI/CD Pipeline Which will 
 	-  Access Github build a Java Spring Boot app
 	-  Run  maven unit tests
 	-  create a deployment jar
