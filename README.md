@@ -2,9 +2,14 @@
 # Jenkins CI/CD on GuestCluster 
 ### Test cases guide for VS7-K8s { Project Pacific } 
 ### Install steps go in ORDER
-This repo will take you through Installing Jenkins on your Env and run CI/CD Pipeline to build a Java Spring Boot app, test the app with maven unit tests, create a jar and then upload the Jar into a Git repo. It will then take  the Docker image and deploy it to  a K8 cluster. 
 
-Pre-Req : 
+### Sumamry of Dev experiencce 
+
+This repo will take you through Installing Jenkins on your Env and run SpringBoot CI/CD Pipeline to build a Java Spring Boot app, test the app with maven unit tests, create a jar and then upload the Jar into a Git repo. It will then take  the Docker image and deploy it to  a K8 cluster. 
+
+We will be deploying the SpringBoot app into a "default" namespace. In the pipeline  will also use Config's for Kubernetes and Github and use them via plugins.
+
+#### Pre-Req : 
 
 - Need Persistant Volume : We use "projectpacific-storage-policy" in this example.
 - K8 cluster to install Master and Slave Pods.
@@ -174,6 +179,11 @@ After a few minutes, if the status does not change, select **Return to Dashboard
 
 > Before proceeding, consider returning to the Plugin Manager, searching for "docker" in the list of available plugins and repeating the previous process for installing plugins: "docker-build-step" and "Docker"
 
+
+### Running Jenkins Pipelines.
+
+There are code samples under the JenkinsScriptFiles that can be used to run some sample pipelines. 
+
 ### Configuring the Kubernetes Credentials and Plugin
 
 From the Jenkins Dashboard select **Credentials**>**System**>**Global credentials (unrestricted)**>**Add Credentials** \
@@ -224,7 +234,44 @@ Select **Test Connection** and test results should indicate **Connection test su
 For basic operations, all other fields' default value should've populated with input from the values.yaml at the time of deployment. Verify the following:
 
 - *Cloud*/*Kubernetes*/*Jenkins URL* = **http://someip:8080*
-### Running Jenkins Pipelines.
 
-There are code samples under the JenkinsScriptFiles that can be used to run some sample pipelines. 
+### Using KubeConfig Plugin creds 
+
+
+This code is pulling the K8 configs and using it. We get the ```kubeconfigId ``` from whenn we created the Plugin.
+
+```
+
+    stage('Deploy App') {
+      steps {
+        script {
+          kubernetesDeploy(configs: "hello-springboot-actuator.yaml", kubeconfigId: "pacifickube")
+        }
+      }
+    }
+```
+
+
+### Configuring Github Creds
+
+When the Pipeline pulls / pushes into GitHub repo, we will use a Jenkins Plugin to apply these creds into the pipeline code. 
+
+From the 
+
+
+### Using GitHub creds 
+
+This code snippet shows the way to use Giuthub creds from the plugin. We get the credentialsId from when we create the username and password plugin. 
+
+```
+stage("Git creds"){
+            steps {
+            withCredentials([usernamePassword(credentialsId: 'newpaulgitpwd', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                sh("""
+               
+                    git config --global user.email "paul@paul.com"
+                    git config --global user.name ${GIT_USERNAME}
+                    git config --local credential.helper "!f() { echo username=paul; echo password=${GIT_PASSWORD}; }; f"
+
+```
 
