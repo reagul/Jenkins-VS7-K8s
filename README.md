@@ -13,7 +13,7 @@ This repo will take you through
 	-  Check-in build repo
 	-  Deploy the docker image to K8 namespace
  
-We will be deploying the SpringBoot app into a "default" namespace. Pipeline wiill use Config's for Kubernetes and Github  using plugins. We configure and run this jenkins file SpringBoot-Actuator-JenkinsFile found inside enkinsScriptFiles/.
+We will be deploying the SpringBoot app into a "default" namespace. Pipeline wiill use Config's for Kubernetes and Github  using plugins. We configure and run this jenkins file SpringBoot-Actuator-JenkinsFile found inside /JenkinsScriptFiles/.
  
 #### Pre-Req : 
 
