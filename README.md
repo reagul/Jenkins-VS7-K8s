@@ -1,24 +1,24 @@
 # Needs validation ** 
 # Jenkins CI/CD on GuestCluster 
-### Test cases guide for VS7-K8s { Project Pacific } 
 ### Install steps go in ORDER
 
 ### Sumamry of Dev experiencce 
 
 This repo will take you through Installing Jenkins on your Env and run SpringBoot CI/CD Pipeline to build a Java Spring Boot app, test the app with maven unit tests, create a jar and then upload the Jar into a Git repo. It will then take  the Docker image and deploy it to  a K8 cluster. 
 
-We will be deploying the SpringBoot app into a "default" namespace. In the pipeline  will also use Config's for Kubernetes and Github and use them via plugins.
-
+We will be deploying the SpringBoot app into a "default" namespace. In the pipeline  will also use Config's for Kubernetes and Github and use them via plugins. We configure and run this jenkins file SpringBoot-Actuator-JenkinsFile found inside enkinsScriptFiles/.
+ 
 #### Pre-Req : 
 
-- Need Persistant Volume : We use "projectpacific-storage-policy" in this example.
+- Need Persistant Volume: We use "projectpacific-storage-policy" in this example.
 - K8 cluster to install Master and Slave Pods.
-- All yaml under the JeninsKinstall folder in this repo 
+- Access to a Github repo. You can have a local Github or remote. 
+- All yaml under the /JeninsKinstall folder in this repo 
 
 
 ### Clone the repo  ** 
 `$ git clone https://https://github.com/reagul/Jenkins-For-ProjectPacific` \
-`$ cd kubernetes-jenkins`
+`$ cd Jenkins-For-ProjectPacific`
 
 ### Create the project Namespace
 `$ kubectl create ns jenkins` 
@@ -183,6 +183,12 @@ After a few minutes, if the status does not change, select **Return to Dashboard
 ### Running Jenkins Pipelines.
 
 There are code samples under the JenkinsScriptFiles that can be used to run some sample pipelines. 
+
+We will run /JenkinsScriptFiles/SpringBoot-Actuator-JenkinsFile sample. This file has sections where we work with Git URL. Please replace this section with your appropriate values.
+
+ ``` REPLACE http://10.10.20.146:3000/paul/  before using``` 
+ 
+
 
 ### Configuring the Kubernetes Credentials and Plugin
 
