@@ -240,9 +240,7 @@ For basic operations, all other fields' default value should've populated with i
 
 This code is pulling the K8 configs and using it. We get the ```kubeconfigId ``` from whenn we created the Plugin.
 
-```
-
-    stage('Deploy App') {
+``` stage('Deploy App') {
       steps {
         script {
           kubernetesDeploy(configs: "hello-springboot-actuator.yaml", kubeconfigId: "pacifickube")
