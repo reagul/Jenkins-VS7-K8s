@@ -15,7 +15,7 @@ This repo will take you through
  
 We will be deploying the SpringBoot app into a "default" namespace. Pipeline wiill use Config's for Kubernetes and Github  using plugins. We will use sample SpringBoot-Actuator-JenkinsFile found inside /JenkinsScriptFiles/.
 
-:star:We will assume that once the build `SUCCEEDS` the user will build a Docker image using the `Dockerfile` and upload to local/remote docker hub of choice. Remember to point the Jenkins File to this image repo.
+:star:We will assume that once the build `SUCCEEDS` the user will build a Docker image using the `Dockerfile` and upload to local/remote docker hub of choice.:bangbang:Remember to point the deployment yaml to this image repo.
 Common docker repo include Artifactory/Nexus. This a necessary manual step at this point in time. 
  
 #### Pre-Req : 
