@@ -1,6 +1,5 @@
 # Needs validation ** 
 # Jenkins CI/CD on GuestCluster 
-### Install steps go in ORDER
 
 ### Summary of experience :hammer_and_wrench:	
 
