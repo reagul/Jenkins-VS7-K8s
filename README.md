@@ -17,7 +17,7 @@ We will be deploying the SpringBoot app into a "default" namespace. Pipeline wii
 :star:We will assume that once the build `SUCCEEDS` the user will build a Docker image using the `Dockerfile` and upload to local/remote docker hub of choice.:bangbang:Remember to point the deployment yaml to this image repo.
 Common docker repo include Artifactory/Nexus. This a necessary manual step at this point in time. 
  
-#### Pre-Req : 
+### Pre-Req:red_circle:
 
 - Need Persistant Volume: We use "projectpacific-storage-policy" in this example.
 - K8 cluster to install Master and Slave Pods.
