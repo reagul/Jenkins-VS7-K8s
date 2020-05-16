@@ -273,3 +273,14 @@ stage("Git creds"){
 
 ```
 
+### Spring Boot app Deployed 
+
+You can test the Spring boot app once deployed with ths example REST call. You can do this on a browser or with Curl.
+
+```
+$ curl http://10.10.20.153/hello-world
+
+Returns
+
+{"id":4,"content":"Hello, Stranger!"}
+```
