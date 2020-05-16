@@ -2,18 +2,20 @@
 # Jenkins CI/CD on GuestCluster 
 ### Install steps go in ORDER
 
-### Summary of experience :star:	
+### Summary of experience	
 
 This repo will take you through 
 - Installing Jenkins on your Kubernetes Env
 - Run  SpringBoot CI/CD Pipeline Which will 
 	-  Access Github build a Java Spring Boot app
-	-  Run  maven unit tests
-	-  create a deployment jar
-	-  Check-in build repo
+	-  Run maven unit tests
+	-  Create deployment jar
+	-  Check-in build 
 	-  Deploy the docker image to K8 namespace
  
 We will be deploying the SpringBoot app into a "default" namespace. Pipeline wiill use Config's for Kubernetes and Github  using plugins. We configure and run this jenkins file SpringBoot-Actuator-JenkinsFile found inside /JenkinsScriptFiles/.
+
+:star:We will assume that once the build `SUCCEEDS` the user will build a Docker image using the `Dockerfile` in this repo and use a local/remote docker hub. Common docker repo include Artifactory/Nexus. This a necessary manual step at this point in time. 
  
 #### Pre-Req : 
 
