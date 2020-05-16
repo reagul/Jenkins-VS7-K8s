@@ -25,6 +25,8 @@ Common docker repo include Artifactory/Nexus. This a necessary manual step at th
 - All yaml under the /JeninsKinstall folder in this repo 
 
 
+## Steps :red_circle:
+
 ### Clone/Fork repo
 `$ git clone https://https://github.com/reagul/Jenkins-For-ProjectPacific` \
 `$ cd Jenkins-For-ProjectPacific`
