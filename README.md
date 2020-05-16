@@ -13,7 +13,7 @@ This repo will take you through
 	-  Check-in build 
 	-  Deploy the docker image to K8 namespace
  
-We will be deploying the SpringBoot app into a "default" namespace. Pipeline wiill use Config's for Kubernetes and Github  using plugins. We will use this sample SpringBoot-Actuator-JenkinsFile found inside /JenkinsScriptFiles/.
+We will be deploying the SpringBoot app into a "default" namespace. Pipeline wiill use Config's for Kubernetes and Github  using plugins. We will use sample SpringBoot-Actuator-JenkinsFile found inside /JenkinsScriptFiles/.
 
 :star:We will assume that once the build `SUCCEEDS` the user will build a Docker image using the `Dockerfile` and upload to local/remote docker hub of choice. Remember to point the Jenkins File to this image repo.
 Common docker repo include Artifactory/Nexus. This a necessary manual step at this point in time. 
