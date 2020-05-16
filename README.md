@@ -2,7 +2,7 @@
 # Jenkins CI/CD on GuestCluster 
 ### Install steps go in ORDER
 
-:star:	### Summary of experience 
+### Summary of experience :star:	
 
 This repo will take you through 
 - Installing Jenkins on your Kubernetes Env
