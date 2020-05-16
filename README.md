@@ -1,4 +1,4 @@
-# Needs validation ** 
+# Draft ** 
 # Jenkins CI/CD on GuestCluster 
 
 ### Summary of experience :hammer_and_wrench:	
