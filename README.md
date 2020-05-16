@@ -20,9 +20,11 @@ Common docker repo include Artifactory/Nexus. This a necessary manual step at th
 ### Pre-Req
 
 - Need Persistant Volume: We use "projectpacific-storage-policy" in this example.
-- K8 cluster to install Master and Slave Pods.
-- Access to a Github repo. You can have a local Github or remote. 
-- All yaml under the /JeninsKinstall folder in this repo 
+- K8 cluster to install Jenkins and Deployment Pods.
+- Access to Github repo. Local or remote. 
+- All yaml under the /JeninsKinstall folder in this repo
+- Docker file to build image
+- Docker repo. We will use DockerHub.
 
 
 ## Steps :red_circle:
