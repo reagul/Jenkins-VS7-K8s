@@ -140,7 +140,7 @@ In case you want to  run custom commands inside the slave, which you might do wi
 
 Let us configure a Kubernetes cloud inside Jenkins.
 
-### Kubernetes Cloud config values
+### Kubernetes Cloud config values :o:
 
 
 This Jenkins master will initiate slave pod creation so we are configuring a Kubernetes cloud config with our custom slave images in it.
@@ -175,7 +175,7 @@ In this test-case we will configure a slave for Kubenretes Cloud \
 * Save
 
 
-### Installing Kubernetes plugin
+### Installing Kubernetes plugin  :o:
 
 Select **Manage Jenkins**>**Manage Plugins**. Select the **Available** tab and enter "kubernetes" in the search filter. Choose the following plugin options:
 	
@@ -193,7 +193,7 @@ After a few minutes, if the status does not change, select **Return to Dashboard
 > Before proceeding, consider returning to the Plugin Manager, searching for "docker" in the list of available plugins and repeating the previous process for installing plugins: "docker-build-step" and "Docker"
 
 
-### Running Jenkins Pipelines.
+### Running Jenkins Pipelines :o:
 
 There are code samples under the JenkinsScriptFiles that can be used to run some sample pipelines. 
 
@@ -203,7 +203,7 @@ We will run /JenkinsScriptFiles/SpringBoot-Actuator-JenkinsFile sample. This fil
  
 
 
-### Configuring the Kubernetes Credentials and Plugin
+### Configuring the Kubernetes Credentials and Plugin :o:
 
 From the Jenkins Dashboard select **Credentials**>**System**>**Global credentials (unrestricted)**>**Add Credentials** \
 Select the *Kind* drop-down and choose **Kubernetes Service Account**
@@ -254,7 +254,7 @@ For basic operations, all other fields' default value should've populated with i
 
 - *Cloud*/*Kubernetes*/*Jenkins URL* = **http://someip:8080*
 
-### Using KubeConfig Plugin creds 
+### Using KubeConfig Plugin creds :o:
 
 
 This code is pulling the K8 configs and using it. We get the ```kubeconfigId ``` from whenn we created the Plugin.
@@ -271,12 +271,10 @@ This code is pulling the K8 configs and using it. We get the ```kubeconfigId ```
 
 ### Configuring Github Creds
 
-When the Pipeline pulls / pushes into GitHub repo, we will use a Jenkins Plugin to apply these creds into the pipeline code. 
-
-From the 
+When the Pipeline pulls / pushes into GitHub repo, we will use username/password plugin to apply these creds into the pipeline code. 
 
 
-### Using GitHub creds 
+### Using GitHub creds  :o:
 
 This code snippet shows the way to use Giuthub creds from the plugin. We get the credentialsId from when we create the username and password plugin. 
 
@@ -292,7 +290,7 @@ stage("Git creds"){
 
 ```
 
-### Spring Boot app Deployed 
+### Spring Boot app Deployed  :o:
 
 You can test the SpringBoot app after deployment stage  with this REST call. Do this via browser or with Curl.
 
