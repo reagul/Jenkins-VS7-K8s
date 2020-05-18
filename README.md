@@ -203,7 +203,7 @@ We will run /JenkinsScriptFiles/SpringBoot-Actuator-JenkinsFile sample. This fil
  
 
 
-### Configuring the Kubernetes Credentials and Plugin :o:
+### Configuring the Kubernetes Credentials on Jenkins :o:
 
 From the Jenkins Dashboard select **Credentials**>**System**>**Global credentials (unrestricted)**>**Add Credentials** \
 Select the *Kind* drop-down and choose **Kubernetes Service Account**
